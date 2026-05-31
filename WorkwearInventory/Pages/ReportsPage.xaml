@@ -1,0 +1,17 @@
+﻿<Page x:Class="WorkwearInventory.Pages.ReportsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Отчёты" Background="{StaticResource LightBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Content="Экспорт в CSV" Style="{StaticResource ModernButton}" 
+                    HorizontalAlignment="Right" Margin="0,0,0,10" Click="ExportCsv_Click"/>
+            <DataGrid Grid.Row="1" x:Name="SalesGrid" Style="{StaticResource ModernDataGrid}" 
+                      AutoGenerateColumns="True" IsReadOnly="True"/>
+        </Grid>
+    </ScrollViewer>
+</Page>
