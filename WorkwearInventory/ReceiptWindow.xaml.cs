@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using Microsoft.Win32;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using WorkwearInventory.Models;
 
 namespace WorkwearInventory
@@ -24,7 +24,6 @@ namespace WorkwearInventory
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                // Печатаем визуальное содержимое окна (без кнопок, можно напечатать весь Grid)
                 printDialog.PrintVisual(this, "Чек продажи");
             }
         }

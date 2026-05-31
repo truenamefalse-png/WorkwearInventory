@@ -16,7 +16,7 @@ namespace WorkwearInventory.Pages
         private void LoadUsers()
         {
             UsersGrid.ItemsSource = null;
-            UsersGrid.ItemsSource = DataService.Users;
+            UsersGrid.ItemsSource = DataService.GetUsers();
         }
 
         private void DeleteUser_Click(object sender, RoutedEventArgs e)

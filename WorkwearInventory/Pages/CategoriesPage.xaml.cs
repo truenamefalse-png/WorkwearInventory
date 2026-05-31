@@ -17,7 +17,7 @@ namespace WorkwearInventory.Pages
         private void LoadCategories()
         {
             CategoryList.ItemsSource = null;
-            CategoryList.ItemsSource = DataService.Categories;
+            CategoryList.ItemsSource = DataService.GetCategories();
         }
 
         private void AddCategory_Click(object sender, RoutedEventArgs e)
@@ -35,7 +35,7 @@ namespace WorkwearInventory.Pages
         {
             if (sender is Button btn && btn.Tag is int catId)
             {
-                var cat = DataService.Categories.FirstOrDefault(c => c.Id == catId);
+                var cat = DataService.GetCategories().FirstOrDefault(c => c.Id == catId);
                 if (cat == null) return;
                 string newName = Interaction.InputBox("Новое название:", "Редактирование категории", cat.Name);
                 if (!string.IsNullOrWhiteSpace(newName))

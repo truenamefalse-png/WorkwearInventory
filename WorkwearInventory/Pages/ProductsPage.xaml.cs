@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using WorkwearInventory.Models;
 using WorkwearInventory.Services;
 
@@ -18,7 +17,7 @@ namespace WorkwearInventory.Pages
         {
             InitializeComponent();
             LoadData();
-            CategoryFilter.ItemsSource = DataService.Categories;
+            CategoryFilter.ItemsSource = DataService.GetCategories();
             CategoryFilter.DisplayMemberPath = "Name";
             CategoryFilter.SelectedValuePath = "Id";
             CategoryFilter.SelectedIndex = -1;
@@ -28,19 +27,21 @@ namespace WorkwearInventory.Pages
         private void LoadData()
         {
             FilteredProducts.Clear();
-            var list = DataService.Products.Select(p => new ProductViewModel
+            var products = DataService.GetProducts(); // уже включает Category
+            foreach (var p in products)
             {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                CategoryId = p.CategoryId,
-                CategoryName = DataService.Categories.FirstOrDefault(c => c.Id == p.CategoryId)?.Name ?? "",
-                Stock = p.Stock,
-                Price = p.Price,
-                PhotoPath = p.PhotoPath
-            });
-            foreach (var item in list)
-                FilteredProducts.Add(item);
+                FilteredProducts.Add(new ProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category?.Name ?? "",
+                    Stock = p.Stock,
+                    Price = p.Price,
+                    PhotoPath = p.PhotoPath
+                });
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -54,7 +55,8 @@ namespace WorkwearInventory.Pages
             string search = SearchBox.Text?.ToLower() ?? "";
             int? categoryId = (CategoryFilter.SelectedValue as int?);
 
-            var filtered = DataService.Products.Where(p =>
+            var allProducts = DataService.GetProducts();
+            var filtered = allProducts.Where(p =>
                 (string.IsNullOrEmpty(search) || p.Name.ToLower().Contains(search)) &&
                 (categoryId == null || p.CategoryId == categoryId)
             ).Select(p => new ProductViewModel
@@ -63,7 +65,7 @@ namespace WorkwearInventory.Pages
                 Name = p.Name,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
-                CategoryName = DataService.Categories.FirstOrDefault(c => c.Id == p.CategoryId)?.Name ?? "",
+                CategoryName = p.Category?.Name ?? "",
                 Stock = p.Stock,
                 Price = p.Price,
                 PhotoPath = p.PhotoPath
@@ -94,7 +96,7 @@ namespace WorkwearInventory.Pages
         {
             if (sender is Button btn && btn.Tag is int productId)
             {
-                var product = DataService.Products.FirstOrDefault(p => p.Id == productId);
+                var product = DataService.GetProducts().FirstOrDefault(p => p.Id == productId);
                 if (product == null) return;
                 var window = new ProductEditWindow(product);
                 if (window.ShowDialog() == true)

@@ -8,130 +8,183 @@ namespace WorkwearInventory.Services
 {
     public static class DataService
     {
-        public static List<User> Users { get; } = new List<User>();
-        public static List<Category> Categories { get; } = new List<Category>();
-        public static List<Product> Products { get; } = new List<Product>();
-        public static List<SaleReceipt> Sales { get; } = new List<SaleReceipt>();
+        private static AppDbContext CreateContext() => new AppDbContext();
 
-        private static int nextCategoryId = 1;
-        private static int nextProductId = 1;
-        private static int nextSaleId = 1;
-
-        static DataService()
-        {
-            Users.Add(new User { Username = "admin", Password = "admin" });
-            Categories.Add(new Category { Id = nextCategoryId++, Name = "Костюмы" });
-            Categories.Add(new Category { Id = nextCategoryId++, Name = "Обувь" });
-            Categories.Add(new Category { Id = nextCategoryId++, Name = "Головные уборы" });
-
-            Products.Add(new Product
-            {
-                Id = nextProductId++,
-                Name = "Костюм сварщика",
-                Description = "Огнестойкий костюм для сварочных работ",
-                CategoryId = 1,
-                Stock = 10,
-                Price = 3500m,
-                PhotoPath = ""
-            });
-            Products.Add(new Product
-            {
-                Id = nextProductId++,
-                Name = "Ботинки кожаные",
-                Description = "Защитные ботинки с металлическим подноском",
-                CategoryId = 2,
-                Stock = 25,
-                Price = 2200m,
-                PhotoPath = ""
-            });
-        }
-
+        // Пользователи
         public static User Authenticate(string username, string password)
         {
-            return Users.FirstOrDefault(u =>
-                u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
-                u.Password == password);
+            using (var db = CreateContext())
+            {
+                return db.Users.FirstOrDefault(u =>
+                    u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
+                    u.Password == password);
+            }
         }
 
         public static bool RegisterUser(string username, string password)
         {
-            if (Users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
-                return false;
-            Users.Add(new User { Username = username, Password = password });
-            return true;
+            using (var db = CreateContext())
+            {
+                if (db.Users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
+                    return false;
+                db.Users.Add(new User { Username = username, Password = password });
+                db.SaveChanges();
+                return true;
+            }
         }
 
         public static void DeleteUser(string username)
         {
-            Users.RemoveAll(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            using (var db = CreateContext())
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == username);
+                if (user != null)
+                {
+                    db.Users.Remove(user);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public static List<User> GetUsers()
+        {
+            using (var db = CreateContext())
+            {
+                return db.Users.ToList();
+            }
+        }
+
+        // Категории
+        public static List<Category> GetCategories()
+        {
+            using (var db = CreateContext())
+            {
+                return db.Categories.ToList();
+            }
         }
 
         public static void AddCategory(string name)
         {
-            Categories.Add(new Category { Id = nextCategoryId++, Name = name });
+            using (var db = CreateContext())
+            {
+                db.Categories.Add(new Category { Name = name });
+                db.SaveChanges();
+            }
         }
 
         public static void UpdateCategory(int id, string newName)
         {
-            var cat = Categories.FirstOrDefault(c => c.Id == id);
-            if (cat != null) cat.Name = newName;
+            using (var db = CreateContext())
+            {
+                var cat = db.Categories.Find(id);
+                if (cat != null)
+                {
+                    cat.Name = newName;
+                    db.SaveChanges();
+                }
+            }
         }
 
         public static void DeleteCategory(int id)
         {
-            Categories.RemoveAll(c => c.Id == id);
+            using (var db = CreateContext())
+            {
+                var cat = db.Categories.Find(id);
+                if (cat != null)
+                {
+                    db.Categories.Remove(cat);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        // Товары
+        public static List<Product> GetProducts()
+        {
+            using (var db = CreateContext())
+            {
+                return db.Products.Include("Category").ToList();
+            }
         }
 
         public static void AddProduct(Product product)
         {
-            product.Id = nextProductId++;
-            Products.Add(product);
+            using (var db = CreateContext())
+            {
+                db.Products.Add(product);
+                db.SaveChanges();
+            }
         }
 
         public static void UpdateProduct(Product product)
         {
-            var existing = Products.FirstOrDefault(p => p.Id == product.Id);
-            if (existing != null)
+            using (var db = CreateContext())
             {
-                existing.Name = product.Name;
-                existing.Description = product.Description;
-                existing.CategoryId = product.CategoryId;
-                existing.Stock = product.Stock;
-                existing.Price = product.Price;
-                existing.PhotoPath = product.PhotoPath;
+                var existing = db.Products.Find(product.Id);
+                if (existing != null)
+                {
+                    existing.Name = product.Name;
+                    existing.Description = product.Description;
+                    existing.CategoryId = product.CategoryId;
+                    existing.Stock = product.Stock;
+                    existing.Price = product.Price;
+                    existing.PhotoPath = product.PhotoPath;
+                    db.SaveChanges();
+                }
             }
         }
 
         public static void DeleteProduct(int id)
         {
-            Products.RemoveAll(p => p.Id == id);
+            using (var db = CreateContext())
+            {
+                var prod = db.Products.Find(id);
+                if (prod != null)
+                {
+                    db.Products.Remove(prod);
+                    db.SaveChanges();
+                }
+            }
         }
 
+        // Продажа
         public static SaleReceipt SellProduct(int productId, int quantity = 1)
         {
-            var product = Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null || product.Stock < quantity)
-                return null;
-
-            product.Stock -= quantity;
-
-            var receipt = new SaleReceipt
+            using (var db = CreateContext())
             {
-                Id = nextSaleId++,
-                SaleDate = DateTime.Now,
-                Items = new List<SaleItem>
+                var product = db.Products.Find(productId);
+                if (product == null || product.Stock < quantity)
+                    return null;
+
+                product.Stock -= quantity;
+
+                var receipt = new SaleReceipt
                 {
-                    new SaleItem
+                    SaleDate = DateTime.Now,
+                    Items = new List<SaleItem>
                     {
-                        ProductName = product.Name,
-                        Quantity = quantity,
-                        UnitPrice = product.Price
-                    }
-                },
-                TotalAmount = product.Price * quantity
-            };
-            Sales.Add(receipt);
-            return receipt;
+                        new SaleItem
+                        {
+                            ProductName = product.Name,
+                            Quantity = quantity,
+                            UnitPrice = product.Price
+                        }
+                    },
+                    TotalAmount = product.Price * quantity
+                };
+
+                db.Sales.Add(receipt);
+                db.SaveChanges();
+                return receipt;
+            }
+        }
+
+        public static List<SaleReceipt> GetSales()
+        {
+            using (var db = CreateContext())
+            {
+                return db.Sales.Include("Items").ToList();
+            }
         }
 
         public static string CopyImageToAppFolder(string sourcePath)

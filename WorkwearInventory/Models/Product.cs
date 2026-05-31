@@ -9,5 +9,7 @@
         public int Stock { get; set; }
         public decimal Price { get; set; }
         public string PhotoPath { get; set; }
+
+        public virtual Category Category { get; set; }
     }
 }

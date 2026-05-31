@@ -12,7 +12,7 @@ namespace WorkwearInventory.Pages
         public ReportsPage()
         {
             InitializeComponent();
-            SalesGrid.ItemsSource = DataService.Sales;
+            SalesGrid.ItemsSource = DataService.GetSales();
         }
 
         private void ExportCsv_Click(object sender, RoutedEventArgs e)
@@ -26,7 +26,7 @@ namespace WorkwearInventory.Pages
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("Id;Дата;Товар;Количество;Цена;Сумма");
-                foreach (var sale in DataService.Sales)
+                foreach (var sale in DataService.GetSales())
                 {
                     foreach (var item in sale.Items)
                     {

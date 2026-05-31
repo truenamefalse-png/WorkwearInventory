@@ -14,7 +14,7 @@ namespace WorkwearInventory
         public ProductEditWindow(Product product = null)
         {
             InitializeComponent();
-            CategoryCombo.ItemsSource = DataService.Categories;
+            CategoryCombo.ItemsSource = DataService.GetCategories();   // <-- исправлено
             if (product != null)
             {
                 editingProduct = product;
