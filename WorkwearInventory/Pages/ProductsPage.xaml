@@ -50,9 +50,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Продать" Style="{StaticResource ModernButton}" 
+                                    <Button Content="Выдать" Style="{StaticResource ModernButton}" 
                                             Background="#27AE60" FontSize="11" Padding="5,2"
-                                            Click="SellProduct_Click" Tag="{Binding Id}"/>
+                                            Click="IssueProduct_Click" Tag="{Binding Id}"/>
                                     <Button Content="Изм." Style="{StaticResource ModernButton}" 
                                             Background="#F39C12" FontSize="11" Padding="5,2"
                                             Click="EditProduct_Click" Tag="{Binding Id}"/>

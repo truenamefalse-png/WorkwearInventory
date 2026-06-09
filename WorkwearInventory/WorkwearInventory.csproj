@@ -68,6 +68,12 @@
     </ApplicationDefinition>
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\StockColorConverter.cs" />
+    <Compile Include="IssueDocumentWindow.xaml.cs">
+      <DependentUpon>IssueDocumentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IssueWindow.xaml.cs">
+      <DependentUpon>IssueWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\SaleReceipt.cs" />
@@ -78,12 +84,17 @@
     <Compile Include="Pages\UsersPage.xaml.cs">
       <DependentUpon>UsersPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReceiptWindow.xaml.cs">
-      <DependentUpon>ReceiptWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Services\AppDbContext.cs" />
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\DbInitializer.cs" />
+    <Page Include="IssueDocumentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IssueWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -125,10 +136,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\UsersPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ReceiptWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

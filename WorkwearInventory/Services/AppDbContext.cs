@@ -7,30 +7,28 @@ namespace WorkwearInventory.Services
     {
         public AppDbContext() : base("DefaultConnection")
         {
-            // Создавать БД, если её нет
-            Database.SetInitializer(new CreateDatabaseIfNotExists<AppDbContext>());
+            Database.SetInitializer(new DbInitializer());
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<SaleReceipt> Sales { get; set; }
-        public DbSet<SaleItem> SaleItems { get; set; }
+        public DbSet<IssueReceipt> IssueReceipts { get; set; }    // было Sales
+        public DbSet<IssueItem> IssueItems { get; set; }         // было SaleItems
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка связей
             modelBuilder.Entity<Product>()
                 .HasRequired(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
 
-            modelBuilder.Entity<SaleReceipt>()
-                .HasMany(s => s.Items)
-                .WithRequired(i => i.Sale)
-                .HasForeignKey(i => i.SaleId);
+            modelBuilder.Entity<IssueReceipt>()
+                .HasMany(r => r.Items)
+                .WithRequired(i => i.IssueReceipt)
+                .HasForeignKey(i => i.IssueReceiptId);
         }
     }
 }

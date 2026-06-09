@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -27,7 +26,7 @@ namespace WorkwearInventory.Pages
         private void LoadData()
         {
             FilteredProducts.Clear();
-            var products = DataService.GetProducts(); // уже включает Category
+            var products = DataService.GetProducts();
             foreach (var p in products)
             {
                 FilteredProducts.Add(new ProductViewModel
@@ -122,20 +121,17 @@ namespace WorkwearInventory.Pages
             }
         }
 
-        private void SellProduct_Click(object sender, RoutedEventArgs e)
+        // Новая кнопка "Выдать"
+        private void IssueProduct_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is int productId)
             {
-                var receipt = DataService.SellProduct(productId);
-                if (receipt != null)
+                // Запрашиваем сотрудника и количество через небольшое окно
+                var issueWindow = new IssueWindow(productId);
+                if (issueWindow.ShowDialog() == true)
                 {
-                    var receiptWindow = new ReceiptWindow(receipt);
-                    receiptWindow.ShowDialog();
+                    // После успешной выдачи обновляем таблицу
                     ApplyFilter();
-                }
-                else
-                {
-                    MessageBox.Show("Недостаточно товара на складе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }

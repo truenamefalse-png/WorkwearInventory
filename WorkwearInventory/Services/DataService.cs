@@ -10,7 +10,7 @@ namespace WorkwearInventory.Services
     {
         private static AppDbContext CreateContext() => new AppDbContext();
 
-        // Пользователи
+        // -------------------- Пользователи --------------------
         public static User Authenticate(string username, string password)
         {
             using (var db = CreateContext())
@@ -54,7 +54,7 @@ namespace WorkwearInventory.Services
             }
         }
 
-        // Категории
+        // -------------------- Категории --------------------
         public static List<Category> GetCategories()
         {
             using (var db = CreateContext())
@@ -98,7 +98,7 @@ namespace WorkwearInventory.Services
             }
         }
 
-        // Товары
+        // -------------------- Товары --------------------
         public static List<Product> GetProducts()
         {
             using (var db = CreateContext())
@@ -147,8 +147,11 @@ namespace WorkwearInventory.Services
             }
         }
 
-        // Продажа
-        public static SaleReceipt SellProduct(int productId, int quantity = 1)
+        // -------------------- Выдача --------------------
+        /// <summary>
+        /// Оформляет выдачу товара сотруднику. Списывает со склада и создаёт запись.
+        /// </summary>
+        public static IssueReceipt IssueProduct(int productId, string employeeName, int quantity = 1)
         {
             using (var db = CreateContext())
             {
@@ -158,12 +161,13 @@ namespace WorkwearInventory.Services
 
                 product.Stock -= quantity;
 
-                var receipt = new SaleReceipt
+                var receipt = new IssueReceipt
                 {
-                    SaleDate = DateTime.Now,
-                    Items = new List<SaleItem>
+                    IssueDate = DateTime.Now,
+                    EmployeeName = employeeName,
+                    Items = new List<IssueItem>
                     {
-                        new SaleItem
+                        new IssueItem
                         {
                             ProductName = product.Name,
                             Quantity = quantity,
@@ -173,20 +177,21 @@ namespace WorkwearInventory.Services
                     TotalAmount = product.Price * quantity
                 };
 
-                db.Sales.Add(receipt);
+                db.IssueReceipts.Add(receipt);
                 db.SaveChanges();
                 return receipt;
             }
         }
 
-        public static List<SaleReceipt> GetSales()
+        public static List<IssueReceipt> GetIssueReceipts()
         {
             using (var db = CreateContext())
             {
-                return db.Sales.Include("Items").ToList();
+                return db.IssueReceipts.Include("Items").ToList();
             }
         }
 
+        // -------------------- Фото --------------------
         public static string CopyImageToAppFolder(string sourcePath)
         {
             try

@@ -16,11 +16,11 @@
             <StackPanel Margin="10">
                 <TextBlock Text="СПЕЦОДЕЖДА" Foreground="White" FontSize="18" FontWeight="Bold"
                            Margin="0,20,0,30" HorizontalAlignment="Center"/>
-                <Button Content="Товары" Style="{StaticResource ModernButton}" 
+                <Button Content="Одежда" Style="{StaticResource ModernButton}" 
                         Background="#34495E" Click="NavigateToProducts"/>
                 <Button Content="Категории" Style="{StaticResource ModernButton}" 
                         Background="#34495E" Click="NavigateToCategories"/>
-                <Button Content="Отчёты" Style="{StaticResource ModernButton}" 
+                <Button Content="Журнал Выдачи" Style="{StaticResource ModernButton}" 
                         Background="#34495E" Click="NavigateToReports"/>
                 <Button x:Name="UsersButton" Content="Пользователи" Style="{StaticResource ModernButton}" 
                         Background="#34495E" Click="NavigateToUsers" Visibility="Collapsed"/>

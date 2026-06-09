@@ -3,7 +3,6 @@ using WorkwearInventory.Models;
 
 namespace WorkwearInventory.Services
 {
-    // Изменено на DropCreateDatabaseIfModelChanges
     public class DbInitializer : DropCreateDatabaseIfModelChanges<AppDbContext>
     {
         protected override void Seed(AppDbContext context)
