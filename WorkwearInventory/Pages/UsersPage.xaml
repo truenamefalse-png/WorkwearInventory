@@ -5,15 +5,14 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="15">
             <DataGrid x:Name="UsersGrid" Style="{StaticResource ModernDataGrid}"
-                      AutoGenerateColumns="False" IsReadOnly="True">
+                      AutoGenerateColumns="False" IsReadOnly="True" FontSize="13">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Логин" Binding="{Binding Username}" Width="*"/>
                     <DataGridTemplateColumn Header="Действия" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Удалить" Style="{StaticResource ModernButton}" 
-                                        Background="#E74C3C" FontSize="11" Padding="5,2"
-                                        Click="DeleteUser_Click" Tag="{Binding Username}"/>
+                                <Button Content="Удалить" Style="{StaticResource ModernButton}" Background="#E74C3C"
+                                        FontSize="12" Padding="6,3" Click="DeleteUser_Click" Tag="{Binding Username}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,48 +12,43 @@ namespace WorkwearInventory
     public partial class IssueDocumentWindow : Window
     {
         private IssueReceipt receipt;
-
         public IssueDocumentWindow(IssueReceipt receipt)
         {
             InitializeComponent();
             this.receipt = receipt;
             EmployeeText.Text = $"Сотрудник: {receipt.EmployeeName}";
-            DateText.Text = $"Дата: {receipt.IssueDate:dd.MM.yyyy HH:mm}";
+            DateText.Text = $"Дата выдачи: {receipt.IssueDate:dd.MM.yyyy HH:mm}";
+            var item = receipt.Items.FirstOrDefault();
+            PeriodText.Text = $"Срок носки: {item?.WearPeriodDays ?? 0} дн.";
+            DateTime dueDate = receipt.IssueDate.AddDays(item?.WearPeriodDays ?? 0);
+            DueDateText.Text = $"Окончание срока: {dueDate:dd.MM.yyyy}";
+            DueDateText2.Text = dueDate.ToString("dd.MM.yyyy");
             ItemsList.ItemsSource = receipt.Items;
-            TotalText.Text = receipt.TotalAmount.ToString("N2") + " руб.";
         }
 
         private void Print_Click(object sender, RoutedEventArgs e)
         {
-            PrintDialog printDialog = new PrintDialog();
-            if (printDialog.ShowDialog() == true)
-            {
-                printDialog.PrintVisual(this, "Наряд на выдачу");
-            }
+            PrintDialog pd = new PrintDialog();
+            if (pd.ShowDialog() == true) pd.PrintVisual(this, "Наряд на выдачу");
         }
 
         private void SaveToFile_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
-            {
-                Filter = "Текстовый файл (*.txt)|*.txt",
-                FileName = $"Наряд_{receipt.Id}_{receipt.EmployeeName}.txt"
-            };
+            var dlg = new SaveFileDialog { Filter = "Текстовый файл|*.txt", FileName = $"Наряд_{receipt.Id}.txt" };
             if (dlg.ShowDialog() == true)
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("НАРЯД НА ВЫДАЧУ СПЕЦОДЕЖДЫ");
+                sb.AppendLine("НАРЯД НА ВЫДАЧУ");
                 sb.AppendLine($"Сотрудник: {receipt.EmployeeName}");
-                sb.AppendLine($"Дата: {receipt.IssueDate:dd.MM.yyyy HH:mm}");
+                sb.AppendLine($"Дата выдачи: {receipt.IssueDate:dd.MM.yyyy}");
+                var item = receipt.Items.FirstOrDefault();
+                sb.AppendLine($"Срок носки: {item?.WearPeriodDays} дн.");
+                sb.AppendLine($"Окончание срока: {receipt.IssueDate.AddDays(item?.WearPeriodDays ?? 0):dd.MM.yyyy}");
                 sb.AppendLine("--------------------------------");
-                foreach (var item in receipt.Items)
-                {
-                    sb.AppendLine($"{item.ProductName}  x{item.Quantity}  {item.UnitPrice:N2} = {item.LineTotal:N2}");
-                }
-                sb.AppendLine("--------------------------------");
-                sb.AppendLine($"Общая стоимость: {receipt.TotalAmount:N2} руб.");
+                foreach (var i in receipt.Items)
+                    sb.AppendLine($"{i.ProductName} x{i.Quantity}");
                 File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
-                MessageBox.Show("Наряд сохранён.", "Готово", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Наряд сохранён.");
             }
         }
     }

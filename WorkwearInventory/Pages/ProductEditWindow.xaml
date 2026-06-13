@@ -1,35 +1,38 @@
 ﻿<Window x:Class="WorkwearInventory.ProductEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Добавить товар" Height="450" Width="400"
+        Title="Добавить позицию" Height="480" Width="400"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         Background="{StaticResource LightBrush}">
-    <Grid Margin="10">
-        <StackPanel>
-            <TextBlock Text="Название:"/>
-            <TextBox x:Name="NameBox" Style="{StaticResource ModernTextBox}"/>
+    <Grid Margin="15">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Наименование:"/>
+                <TextBox x:Name="NameBox" Style="{StaticResource ModernTextBox}" Margin="0,5,0,8"/>
 
-            <TextBlock Text="Описание:" Margin="0,10,0,0"/>
-            <TextBox x:Name="DescriptionBox" Style="{StaticResource ModernTextBox}" Height="60" TextWrapping="Wrap"/>
+                <TextBlock Text="Характеристики:"/>
+                <TextBox x:Name="DescriptionBox" Style="{StaticResource ModernTextBox}" Height="60" TextWrapping="Wrap" Margin="0,5,0,8"/>
 
-            <TextBlock Text="Категория:" Margin="0,10,0,0"/>
-            <ComboBox x:Name="CategoryCombo" Style="{StaticResource ModernComboBox}"
-                      DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                <TextBlock Text="Категория:"/>
+                <ComboBox x:Name="CategoryCombo" Style="{StaticResource ModernComboBox}" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,5,0,8"/>
 
-            <TextBlock Text="Цена:" Margin="0,10,0,0"/>
-            <TextBox x:Name="PriceBox" Style="{StaticResource ModernTextBox}"/>
+                <TextBlock Text="Срок носки (дней):"/>
+                <TextBox x:Name="WearPeriodBox" Style="{StaticResource ModernTextBox}" Margin="0,5,0,8"/>
 
-            <TextBlock Text="Количество:" Margin="0,10,0,0"/>
-            <TextBox x:Name="StockBox" Style="{StaticResource ModernTextBox}"/>
+                <TextBlock Text="Количество:"/>
+                <TextBox x:Name="StockBox" Style="{StaticResource ModernTextBox}" Margin="0,5,0,8"/>
 
-            <TextBlock Text="Фото:" Margin="0,10,0,0"/>
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Выбрать..." Style="{StaticResource ModernButton}" Click="ChoosePhoto_Click"/>
-                <TextBlock x:Name="PhotoNameText" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                <TextBlock Text="Фото:" Margin="0,10,0,0"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,8">
+                    <Button Content="Выбрать..." Style="{StaticResource ModernButton}" Click="ChoosePhoto_Click"
+                            FontSize="14" Padding="10,5"/>
+                    <TextBlock x:Name="PhotoNameText" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <Button Content="Сохранить" Style="{StaticResource ModernButton}" 
+                        Width="120" Margin="0,15,0,0" Click="Save_Click"
+                        FontSize="14" Padding="10,5"/>
             </StackPanel>
-
-            <Button Content="Сохранить" Style="{StaticResource ModernButton}" 
-                    Width="100" Margin="0,20,0,0" Click="Save_Click"/>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

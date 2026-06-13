@@ -9,14 +9,15 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBox x:Name="NewCategoryBox" Style="{StaticResource ModernTextBox}" Width="200"/>
-                <Button Content="Добавить" Style="{StaticResource ModernButton}" Click="AddCategory_Click"/>
+                <TextBox x:Name="NewCategoryBox" Style="{StaticResource ModernTextBox}" Width="220" FontSize="14"/>
+                <Button Content="Добавить" Style="{StaticResource ModernButton}" Click="AddCategory_Click"
+                        FontSize="14" Padding="12,6" Margin="10,0,0,0"/>
             </StackPanel>
-            <!-- ВАЖНО: убран DisplayMemberPath -->
             <ListBox x:Name="CategoryList" Grid.Row="1">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0,4"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
@@ -26,13 +27,14 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="15" Foreground="{StaticResource TextBrush}"/>
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <Button Content="Изм." Style="{StaticResource ModernButton}" 
-                                        Background="#F39C12" FontSize="11" Padding="5,2"
-                                        Click="EditCategory_Click" Tag="{Binding Id}"/>
-                                <Button Content="Удал." Style="{StaticResource ModernButton}" 
-                                        Background="#E74C3C" FontSize="11" Padding="5,2"
+                                <!-- Кнопки увеличены: FontSize 14, Padding 10,5 -->
+                                <Button Content="Изменить" Style="{StaticResource ModernButton}" 
+                                        Background="#F39C12" FontSize="14" Padding="10,5"
+                                        Click="EditCategory_Click" Tag="{Binding Id}" Margin="0,0,5,0"/>
+                                <Button Content="Удалить" Style="{StaticResource ModernButton}" 
+                                        Background="#E74C3C" FontSize="14" Padding="10,5"
                                         Click="DeleteCategory_Click" Tag="{Binding Id}"/>
                             </StackPanel>
                         </Grid>

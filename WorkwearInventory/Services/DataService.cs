@@ -10,15 +10,11 @@ namespace WorkwearInventory.Services
     {
         private static AppDbContext CreateContext() => new AppDbContext();
 
-        // -------------------- Пользователи --------------------
+        // ----- Пользователи -----
         public static User Authenticate(string username, string password)
         {
             using (var db = CreateContext())
-            {
-                return db.Users.FirstOrDefault(u =>
-                    u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
-                    u.Password == password);
-            }
+                return db.Users.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) && u.Password == password);
         }
 
         public static bool RegisterUser(string username, string password)
@@ -38,38 +34,26 @@ namespace WorkwearInventory.Services
             using (var db = CreateContext())
             {
                 var user = db.Users.FirstOrDefault(u => u.Username == username);
-                if (user != null)
-                {
-                    db.Users.Remove(user);
-                    db.SaveChanges();
-                }
+                if (user != null) { db.Users.Remove(user); db.SaveChanges(); }
             }
         }
 
         public static List<User> GetUsers()
         {
             using (var db = CreateContext())
-            {
                 return db.Users.ToList();
-            }
         }
 
-        // -------------------- Категории --------------------
+        // ----- Категории -----
         public static List<Category> GetCategories()
         {
             using (var db = CreateContext())
-            {
                 return db.Categories.ToList();
-            }
         }
 
         public static void AddCategory(string name)
         {
-            using (var db = CreateContext())
-            {
-                db.Categories.Add(new Category { Name = name });
-                db.SaveChanges();
-            }
+            using (var db = CreateContext()) { db.Categories.Add(new Category { Name = name }); db.SaveChanges(); }
         }
 
         public static void UpdateCategory(int id, string newName)
@@ -77,11 +61,7 @@ namespace WorkwearInventory.Services
             using (var db = CreateContext())
             {
                 var cat = db.Categories.Find(id);
-                if (cat != null)
-                {
-                    cat.Name = newName;
-                    db.SaveChanges();
-                }
+                if (cat != null) { cat.Name = newName; db.SaveChanges(); }
             }
         }
 
@@ -90,30 +70,20 @@ namespace WorkwearInventory.Services
             using (var db = CreateContext())
             {
                 var cat = db.Categories.Find(id);
-                if (cat != null)
-                {
-                    db.Categories.Remove(cat);
-                    db.SaveChanges();
-                }
+                if (cat != null) { db.Categories.Remove(cat); db.SaveChanges(); }
             }
         }
 
-        // -------------------- Товары --------------------
+        // ----- Спецодежда -----
         public static List<Product> GetProducts()
         {
             using (var db = CreateContext())
-            {
                 return db.Products.Include("Category").ToList();
-            }
         }
 
         public static void AddProduct(Product product)
         {
-            using (var db = CreateContext())
-            {
-                db.Products.Add(product);
-                db.SaveChanges();
-            }
+            using (var db = CreateContext()) { db.Products.Add(product); db.SaveChanges(); }
         }
 
         public static void UpdateProduct(Product product)
@@ -127,7 +97,7 @@ namespace WorkwearInventory.Services
                     existing.Description = product.Description;
                     existing.CategoryId = product.CategoryId;
                     existing.Stock = product.Stock;
-                    existing.Price = product.Price;
+                    existing.WearPeriodDays = product.WearPeriodDays;
                     existing.PhotoPath = product.PhotoPath;
                     db.SaveChanges();
                 }
@@ -139,19 +109,12 @@ namespace WorkwearInventory.Services
             using (var db = CreateContext())
             {
                 var prod = db.Products.Find(id);
-                if (prod != null)
-                {
-                    db.Products.Remove(prod);
-                    db.SaveChanges();
-                }
+                if (prod != null) { db.Products.Remove(prod); db.SaveChanges(); }
             }
         }
 
-        // -------------------- Выдача --------------------
-        /// <summary>
-        /// Оформляет выдачу товара сотруднику. Списывает со склада и создаёт запись.
-        /// </summary>
-        public static IssueReceipt IssueProduct(int productId, string employeeName, int quantity = 1)
+        // ----- Выдача -----
+        public static IssueReceipt IssueProduct(int productId, string employeeName, int quantity, int wearDays)
         {
             using (var db = CreateContext())
             {
@@ -166,15 +129,14 @@ namespace WorkwearInventory.Services
                     IssueDate = DateTime.Now,
                     EmployeeName = employeeName,
                     Items = new List<IssueItem>
-                    {
-                        new IssueItem
-                        {
-                            ProductName = product.Name,
-                            Quantity = quantity,
-                            UnitPrice = product.Price
-                        }
-                    },
-                    TotalAmount = product.Price * quantity
+            {
+                new IssueItem
+                {
+                    ProductName = product.Name,
+                    Quantity = quantity,
+                    WearPeriodDays = wearDays   // теперь используется переданное значение
+                }
+            }
                 };
 
                 db.IssueReceipts.Add(receipt);
@@ -183,34 +145,46 @@ namespace WorkwearInventory.Services
             }
         }
 
-        public static List<IssueReceipt> GetIssueReceipts()
+
+        // Возврат: устанавливает дату возврата и возвращает количество на склад
+        public static bool ReturnProduct(int issueReceiptId)
         {
             using (var db = CreateContext())
             {
-                return db.IssueReceipts.Include("Items").ToList();
+                var receipt = db.IssueReceipts.Include("Items").FirstOrDefault(r => r.Id == issueReceiptId);
+                if (receipt == null || receipt.DateReturned != null) return false;
+
+                foreach (var item in receipt.Items)
+                {
+                    var product = db.Products.FirstOrDefault(p => p.Name == item.ProductName);
+                    if (product != null) product.Stock += item.Quantity;
+                }
+
+                receipt.DateReturned = DateTime.Now;
+                db.SaveChanges();
+                return true;
             }
         }
 
-        // -------------------- Фото --------------------
+        public static List<IssueReceipt> GetIssueReceipts()
+        {
+            using (var db = CreateContext())
+                return db.IssueReceipts.Include("Items").ToList();
+        }
+
+        // ----- Фото -----
         public static string CopyImageToAppFolder(string sourcePath)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
-                    return string.Empty;
-
+                if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath)) return "";
                 string imagesDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductImages");
                 Directory.CreateDirectory(imagesDir);
-
                 string fileName = $"{Guid.NewGuid()}{Path.GetExtension(sourcePath)}";
-                string destPath = Path.Combine(imagesDir, fileName);
-                File.Copy(sourcePath, destPath, true);
+                File.Copy(sourcePath, Path.Combine(imagesDir, fileName), true);
                 return fileName;
             }
-            catch
-            {
-                return string.Empty;
-            }
+            catch { return ""; }
         }
     }
 }

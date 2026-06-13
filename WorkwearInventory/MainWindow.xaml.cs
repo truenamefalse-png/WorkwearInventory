@@ -7,7 +7,6 @@ namespace WorkwearInventory
     public partial class MainWindow : Window
     {
         public static string LoggedInUser { get; set; }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -26,7 +25,6 @@ namespace WorkwearInventory
         private void NavigateToCategories(object sender, RoutedEventArgs e) => MainFrame.Navigate(new CategoriesPage());
         private void NavigateToReports(object sender, RoutedEventArgs e) => MainFrame.Navigate(new ReportsPage());
         private void NavigateToUsers(object sender, RoutedEventArgs e) => MainFrame.Navigate(new UsersPage());
-
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             LoggedInUser = null;

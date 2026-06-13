@@ -2,8 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Склад спецодежды" Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Background="{StaticResource LightBrush}">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,16 +15,18 @@
             <StackPanel Margin="10">
                 <TextBlock Text="СПЕЦОДЕЖДА" Foreground="White" FontSize="18" FontWeight="Bold"
                            Margin="0,20,0,30" HorizontalAlignment="Center"/>
-                <Button Content="Одежда" Style="{StaticResource ModernButton}" 
-                        Background="#34495E" Click="NavigateToProducts"/>
+                <!-- Кнопки без явного Background, используют стиль ModernButton (бежевый) -->
+                <Button Content="Спецодежда" Style="{StaticResource ModernButton}" 
+                        Click="NavigateToProducts" FontSize="14" Padding="10,5"/>
                 <Button Content="Категории" Style="{StaticResource ModernButton}" 
-                        Background="#34495E" Click="NavigateToCategories"/>
-                <Button Content="Журнал Выдачи" Style="{StaticResource ModernButton}" 
-                        Background="#34495E" Click="NavigateToReports"/>
+                        Click="NavigateToCategories" FontSize="14" Padding="10,5"/>
+                <Button Content="Журнал выдачи" Style="{StaticResource ModernButton}" 
+                        Click="NavigateToReports" FontSize="14" Padding="10,5"/>
                 <Button x:Name="UsersButton" Content="Пользователи" Style="{StaticResource ModernButton}" 
-                        Background="#34495E" Click="NavigateToUsers" Visibility="Collapsed"/>
+                        Click="NavigateToUsers" Visibility="Collapsed" FontSize="14" Padding="10,5"/>
                 <Button Content="Выход" Style="{StaticResource ModernButton}" 
-                        Background="#E74C3C" Click="Logout_Click" Margin="0,30,0,0"/>
+                        Background="#E74C3C" Click="Logout_Click" Margin="0,30,0,0"
+                        FontSize="14" Padding="10,5"/>
                 <TextBlock Text="Пользователь:" Foreground="#BDC3C7" Margin="0,20,0,0"/>
                 <TextBlock x:Name="CurrentUserText" Foreground="White" FontWeight="Bold"/>
             </StackPanel>

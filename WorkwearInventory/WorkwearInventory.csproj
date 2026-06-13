@@ -67,6 +67,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\ImagePathConverter.cs" />
+    <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\StockColorConverter.cs" />
     <Compile Include="IssueDocumentWindow.xaml.cs">
       <DependentUpon>IssueDocumentWindow.xaml</DependentUpon>
@@ -75,8 +76,8 @@
       <DependentUpon>IssueWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\IssueReceipt.cs" />
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\SaleReceipt.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\ProductEditWindow.xaml.cs">
       <DependentUpon>ProductEditWindow.xaml</DependentUpon>

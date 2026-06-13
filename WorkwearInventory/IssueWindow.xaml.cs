@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using WorkwearInventory.Services;
 
 namespace WorkwearInventory
@@ -11,6 +12,17 @@ namespace WorkwearInventory
         {
             InitializeComponent();
             this.productId = productId;
+
+            // Подгружаем срок носки из базы и ставим в поле по умолчанию
+            var product = DataService.GetProducts().FirstOrDefault(p => p.Id == productId);
+            if (product != null)
+            {
+                WearPeriodBox.Text = product.WearPeriodDays.ToString();
+            }
+            else
+            {
+                WearPeriodBox.Text = "30"; // запасное значение
+            }
         }
 
         private void IssueButton_Click(object sender, RoutedEventArgs e)
@@ -18,7 +30,7 @@ namespace WorkwearInventory
             string employee = EmployeeNameBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(employee))
             {
-                MessageBox.Show("Введите фамилию сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Введите ФИО сотрудника.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -28,14 +40,20 @@ namespace WorkwearInventory
                 return;
             }
 
-            var receipt = DataService.IssueProduct(productId, employee, qty);
-            if (receipt == null)
+            if (!int.TryParse(WearPeriodBox.Text, out int wearDays) || wearDays < 1)
             {
-                MessageBox.Show("Недостаточно товара на складе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Введите корректный срок носки (целое число дней).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Показать сформированный документ выдачи
+            // Вызов метода выдачи с новым параметром (обновлённый DataService ниже)
+            var receipt = DataService.IssueProduct(productId, employee, qty, wearDays);
+            if (receipt == null)
+            {
+                MessageBox.Show("Недостаточно на складе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var docWindow = new IssueDocumentWindow(receipt);
             docWindow.ShowDialog();
 

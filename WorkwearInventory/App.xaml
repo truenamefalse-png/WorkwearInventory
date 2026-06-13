@@ -4,18 +4,23 @@
              xmlns:local="clr-namespace:WorkwearInventory.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!-- Основная цветовая схема -->
-        <SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
-        <SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
-        <SolidColorBrush x:Key="LightBrush" Color="#ECF0F1"/>
-        <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
-        <SolidColorBrush x:Key="WhiteBrush" Color="White"/>
+        <!-- Бежевая палитра -->
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#5D4037"/>
+        <!-- тёмно-коричневый для боковой панели -->
+        <SolidColorBrush x:Key="AccentBrush" Color="#8D6E63"/>
+        <!-- приглушённый бежево-коричневый для кнопок -->
+        <SolidColorBrush x:Key="LightBrush" Color="#FFF8E1"/>
+        <!-- светлый кремовый фон -->
+        <SolidColorBrush x:Key="TextBrush" Color="#4E342E"/>
+        <!-- тёмно-коричневый текст -->
+        <SolidColorBrush x:Key="WhiteBrush" Color="#FFFFFF"/>
 
         <!-- Конвертеры -->
         <local:ImagePathConverter x:Key="ImageConverter"/>
         <local:StockColorConverter x:Key="StockColorConverter"/>
+        <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
 
-        <!-- Стиль кнопки -->
+        <!-- Кнопка -->
         <Style TargetType="Button" x:Key="ModernButton">
             <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -32,7 +37,7 @@
                                 CornerRadius="6"
                                 Padding="{TemplateBinding Padding}">
                             <Border.Effect>
-                                <DropShadowEffect Color="#000000" BlurRadius="5" ShadowDepth="2" Opacity="0.2"/>
+                                <DropShadowEffect Color="#000000" BlurRadius="5" ShadowDepth="2" Opacity="0.15"/>
                             </Border.Effect>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -41,18 +46,18 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#2980B9"/>
+                    <Setter Property="Background" Value="#795548"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#1F618D"/>
+                    <Setter Property="Background" Value="#5D4037"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Стиль TextBox -->
+        <!-- TextBox -->
         <Style TargetType="TextBox" x:Key="ModernTextBox">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderBrush" Value="#D7CCC8"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,5"/>
             <Setter Property="FontSize" Value="14"/>
@@ -70,10 +75,10 @@
             </Setter>
         </Style>
 
-        <!-- Стиль PasswordBox -->
+        <!-- PasswordBox -->
         <Style TargetType="PasswordBox" x:Key="ModernPasswordBox">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderBrush" Value="#D7CCC8"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,5"/>
             <Setter Property="FontSize" Value="14"/>
@@ -91,18 +96,18 @@
             </Setter>
         </Style>
 
-        <!-- Стиль ComboBox -->
+        <!-- ComboBox -->
         <Style TargetType="ComboBox" x:Key="ModernComboBox">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderBrush" Value="#D7CCC8"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
 
-        <!-- Стиль DataGrid -->
+        <!-- DataGrid -->
         <Style TargetType="DataGrid" x:Key="ModernDataGrid">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderBrush" Value="#D7CCC8"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="HeadersVisibility" Value="Column"/>

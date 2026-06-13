@@ -7,7 +7,7 @@
         public string Description { get; set; }
         public int CategoryId { get; set; }
         public int Stock { get; set; }
-        public decimal Price { get; set; }
+        public int WearPeriodDays { get; set; }   // срок носки в днях
         public string PhotoPath { get; set; }
 
         public virtual Category Category { get; set; }

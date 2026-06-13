@@ -14,27 +14,23 @@ namespace WorkwearInventory
         public ProductEditWindow(Product product = null)
         {
             InitializeComponent();
-            CategoryCombo.ItemsSource = DataService.GetCategories();   // <-- исправлено
+            CategoryCombo.ItemsSource = DataService.GetCategories();
             if (product != null)
             {
                 editingProduct = product;
                 NameBox.Text = product.Name;
                 DescriptionBox.Text = product.Description;
                 CategoryCombo.SelectedValue = product.CategoryId;
-                PriceBox.Text = product.Price.ToString();
+                WearPeriodBox.Text = product.WearPeriodDays.ToString();
                 StockBox.Text = product.Stock.ToString();
-                if (!string.IsNullOrEmpty(product.PhotoPath))
-                {
-                    PhotoNameText.Text = product.PhotoPath;
-                }
-                Title = "Редактирование товара";
+                if (!string.IsNullOrEmpty(product.PhotoPath)) PhotoNameText.Text = product.PhotoPath;
+                Title = "Редактирование позиции";
             }
         }
 
         private void ChoosePhoto_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Изображения|*.jpg;*.jpeg;*.png;*.bmp";
+            OpenFileDialog dlg = new OpenFileDialog { Filter = "Изображения|*.jpg;*.jpeg;*.png;*.bmp" };
             if (dlg.ShowDialog() == true)
             {
                 PhotoSourcePath = dlg.FileName;
@@ -45,20 +41,11 @@ namespace WorkwearInventory
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(NameBox.Text) || CategoryCombo.SelectedValue == null)
-            {
-                MessageBox.Show("Заполните название и категорию");
-                return;
-            }
-            if (!decimal.TryParse(PriceBox.Text, out decimal price))
-            {
-                MessageBox.Show("Некорректная цена");
-                return;
-            }
+            { MessageBox.Show("Заполните наименование и категорию"); return; }
+            if (!int.TryParse(WearPeriodBox.Text, out int wear))
+            { MessageBox.Show("Некорректный срок носки"); return; }
             if (!int.TryParse(StockBox.Text, out int stock))
-            {
-                MessageBox.Show("Некорректное количество");
-                return;
-            }
+            { MessageBox.Show("Некорректное количество"); return; }
 
             ProductResult = new Product
             {
@@ -66,10 +53,9 @@ namespace WorkwearInventory
                 Name = NameBox.Text,
                 Description = DescriptionBox.Text,
                 CategoryId = (int)CategoryCombo.SelectedValue,
-                Price = price,
+                WearPeriodDays = wear,
                 Stock = stock
             };
-
             DialogResult = true;
             Close();
         }

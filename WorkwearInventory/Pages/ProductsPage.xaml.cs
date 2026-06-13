@@ -26,8 +26,7 @@ namespace WorkwearInventory.Pages
         private void LoadData()
         {
             FilteredProducts.Clear();
-            var products = DataService.GetProducts();
-            foreach (var p in products)
+            foreach (var p in DataService.GetProducts())
             {
                 FilteredProducts.Add(new ProductViewModel
                 {
@@ -37,7 +36,7 @@ namespace WorkwearInventory.Pages
                     CategoryId = p.CategoryId,
                     CategoryName = p.Category?.Name ?? "",
                     Stock = p.Stock,
-                    Price = p.Price,
+                    WearPeriodDays = p.WearPeriodDays,
                     PhotoPath = p.PhotoPath
                 });
             }
@@ -54,25 +53,23 @@ namespace WorkwearInventory.Pages
             string search = SearchBox.Text?.ToLower() ?? "";
             int? categoryId = (CategoryFilter.SelectedValue as int?);
 
-            var allProducts = DataService.GetProducts();
-            var filtered = allProducts.Where(p =>
-                (string.IsNullOrEmpty(search) || p.Name.ToLower().Contains(search)) &&
-                (categoryId == null || p.CategoryId == categoryId)
-            ).Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category?.Name ?? "",
-                Stock = p.Stock,
-                Price = p.Price,
-                PhotoPath = p.PhotoPath
-            }).ToList();
+            var filtered = DataService.GetProducts()
+                .Where(p => (string.IsNullOrEmpty(search) || p.Name.ToLower().Contains(search)) &&
+                            (categoryId == null || p.CategoryId == categoryId))
+                .Select(p => new ProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category?.Name ?? "",
+                    Stock = p.Stock,
+                    WearPeriodDays = p.WearPeriodDays,
+                    PhotoPath = p.PhotoPath
+                }).ToList();
 
             FilteredProducts.Clear();
-            foreach (var vm in filtered)
-                FilteredProducts.Add(vm);
+            foreach (var vm in filtered) FilteredProducts.Add(vm);
         }
 
         private void AddProduct_Click(object sender, RoutedEventArgs e)
@@ -82,10 +79,7 @@ namespace WorkwearInventory.Pages
             {
                 var newProduct = window.ProductResult;
                 if (!string.IsNullOrEmpty(window.PhotoSourcePath))
-                {
-                    string fileName = DataService.CopyImageToAppFolder(window.PhotoSourcePath);
-                    newProduct.PhotoPath = fileName;
-                }
+                    newProduct.PhotoPath = DataService.CopyImageToAppFolder(window.PhotoSourcePath);
                 DataService.AddProduct(newProduct);
                 ApplyFilter();
             }
@@ -113,7 +107,7 @@ namespace WorkwearInventory.Pages
         {
             if (sender is Button btn && btn.Tag is int productId)
             {
-                if (MessageBox.Show("Удалить товар?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Удалить позицию?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     DataService.DeleteProduct(productId);
                     ApplyFilter();
@@ -121,18 +115,13 @@ namespace WorkwearInventory.Pages
             }
         }
 
-        // Новая кнопка "Выдать"
         private void IssueProduct_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is int productId)
             {
-                // Запрашиваем сотрудника и количество через небольшое окно
                 var issueWindow = new IssueWindow(productId);
                 if (issueWindow.ShowDialog() == true)
-                {
-                    // После успешной выдачи обновляем таблицу
                     ApplyFilter();
-                }
             }
         }
     }
@@ -145,7 +134,7 @@ namespace WorkwearInventory.Pages
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int Stock { get; set; }
-        public decimal Price { get; set; }
+        public int WearPeriodDays { get; set; }   // вместо Price
         public string PhotoPath { get; set; }
     }
 }
