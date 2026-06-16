@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using WorkwearInventory.Models;
 
 namespace WorkwearInventory.Services
@@ -7,12 +8,21 @@ namespace WorkwearInventory.Services
     {
         protected override void Seed(AppDbContext context)
         {
-            // 1. Пользователи (3)
+            // ========== ПОЛЬЗОВАТЕЛИ (12 записей) ==========
             context.Users.Add(new User { Username = "admin", Password = "admin" });
             context.Users.Add(new User { Username = "sklad1", Password = "123" });
             context.Users.Add(new User { Username = "sklad2", Password = "123" });
+            context.Users.Add(new User { Username = "ivanov", Password = "111" });
+            context.Users.Add(new User { Username = "petrov", Password = "222" });
+            context.Users.Add(new User { Username = "sidorov", Password = "333" });
+            context.Users.Add(new User { Username = "smirnov", Password = "444" });
+            context.Users.Add(new User { Username = "kuznecov", Password = "555" });
+            context.Users.Add(new User { Username = "popov", Password = "666" });
+            context.Users.Add(new User { Username = "vasilev", Password = "777" });
+            context.Users.Add(new User { Username = "mihaylov", Password = "888" });
+            context.Users.Add(new User { Username = "sokolov", Password = "999" });
 
-            // 2. Категории (5)
+            // ========== КАТЕГОРИИ (5) ==========
             context.Categories.Add(new Category { Name = "Костюмы" });
             context.Categories.Add(new Category { Name = "Обувь" });
             context.Categories.Add(new Category { Name = "Головные уборы" });
@@ -21,7 +31,7 @@ namespace WorkwearInventory.Services
 
             context.SaveChanges();
 
-            // 3. Спецодежда (20 позиций с размерами)
+            // ========== ТОВАРЫ (20 позиций) ==========
             context.Products.Add(new Product { Name = "Костюм сварщика", Description = "Огнестойкий", CategoryId = 1, Stock = 15, WearPeriodDays = 180, Size = "52-54" });
             context.Products.Add(new Product { Name = "Костюм электрика", Description = "Х/б, устойчивый к дуге", CategoryId = 1, Stock = 8, WearPeriodDays = 150, Size = "48-50" });
             context.Products.Add(new Product { Name = "Костюм маляра", Description = "Защита от краски", CategoryId = 1, Stock = 12, WearPeriodDays = 120, Size = "50-52" });
@@ -43,9 +53,69 @@ namespace WorkwearInventory.Services
             context.Products.Add(new Product { Name = "Рукавицы утеплённые", Description = "Зимние", CategoryId = 5, Stock = 120, WearPeriodDays = 120, Size = "10" });
             context.Products.Add(new Product { Name = "Боты диэлектрические", Description = "До 1000 В", CategoryId = 2, Stock = 15, WearPeriodDays = 365, Size = "43" });
 
-            // 4. Пара заявок для примера
-            context.Requests.Add(new Request { EmployeeName = "Иванов И.И.", ProductName = "Костюм сварщика", Size = "52-54", Quantity = 1, RequestDate = System.DateTime.Now.AddDays(-3), Status = "Новая" });
-            context.Requests.Add(new Request { EmployeeName = "Петров П.П.", ProductName = "Ботинки кожаные", Size = "42", Quantity = 2, RequestDate = System.DateTime.Now.AddDays(-1), Status = "Выполнена" });
+            // ========== ЗАЯВКИ (все выполнены, 25 штук) ==========
+            string[] employees = { "Иванов И.И.", "Петров П.П.", "Сидоров С.С.", "Смирнов С.М.", "Кузнецов К.К.",
+                                   "Попов П.А.", "Васильев В.В.", "Михайлов М.М.", "Соколов С.А.", "Лебедев Л.Л." };
+            string[] products = { "Костюм сварщика", "Ботинки кожаные", "Каска строительная", "Перчатки х/б", "Респиратор",
+                                  "Защитные очки", "Шапка зимняя", "Перчатки брезентовые", "Сапоги резиновые", "Бейсболка" };
+            string[] sizes = { "52-54", "42", "Универсальная", "10", "Универсальный", "Универсальные", "56-58", "10", "43", "Универсальная" };
+
+            for (int i = 0; i < 25; i++)
+            {
+                int empIdx = i % employees.Length;
+                int prodIdx = i % products.Length;
+                context.Requests.Add(new Request
+                {
+                    EmployeeName = employees[empIdx],
+                    ProductName = products[prodIdx],
+                    Size = sizes[prodIdx],
+                    Quantity = (i % 5) + 1,
+                    RequestDate = DateTime.Now.AddDays(-i * 2),
+                    Status = "Выполнена"
+                });
+            }
+
+            // ========== ЖУРНАЛ ВЫДАЧИ (много записей) ==========
+            // Создадим 40 записей о выдаче с разными статусами возврата
+            string[] empForIssue = { "Иванов И.И.", "Петров П.П.", "Сидоров С.С.", "Смирнов С.М.", "Кузнецов К.К.",
+                                     "Попов П.А.", "Васильев В.В.", "Михайлов М.М.", "Соколов С.А.", "Лебедев Л.Л.",
+                                     "Фёдоров Ф.Ф.", "Николаев Н.Н.", "Алексеев А.А.", "Степанов С.С.", "Тимофеев Т.Т." };
+            string[] prodForIssue = { "Костюм сварщика", "Ботинки кожаные", "Каска строительная", "Перчатки х/б",
+                                      "Респиратор", "Защитные очки", "Шапка зимняя", "Перчатки брезентовые",
+                                      "Сапоги резиновые", "Бейсболка", "Наушники противошумные", "Подшлемник",
+                                      "Жилет сигнальный", "Рукавицы утеплённые", "Боты диэлектрические" };
+            string[] szForIssue = { "52-54", "42", "Универсальная", "10", "Универсальный", "Универсальные", "56-58",
+                                    "10", "43", "Универсальная", "Универсальные", "Универсальный", "48-50", "10", "43" };
+            int[] wearDays = { 180, 365, 730, 30, 7, 90, 270, 45, 240, 180, 180, 90, 180, 120, 365 };
+
+            Random rnd = new Random(42); // для воспроизводимости
+            for (int i = 0; i < 40; i++)
+            {
+                int empIdx = i % empForIssue.Length;
+                int prodIdx = i % prodForIssue.Length;
+                var issue = new IssueReceipt
+                {
+                    IssueDate = DateTime.Now.AddDays(-rnd.Next(1, 180)),
+                    EmployeeName = empForIssue[empIdx]
+                };
+
+                // Половина выдач возвращена
+                if (i % 2 == 0)
+                {
+                    issue.DateReturned = issue.IssueDate.AddDays(rnd.Next(10, 60));
+                    if (issue.DateReturned > DateTime.Now) issue.DateReturned = DateTime.Now.AddDays(-1);
+                }
+
+                issue.Items.Add(new IssueItem
+                {
+                    ProductName = prodForIssue[prodIdx],
+                    Quantity = rnd.Next(1, 5),
+                    WearPeriodDays = wearDays[prodIdx],
+                    Size = szForIssue[prodIdx]
+                });
+
+                context.IssueReceipts.Add(issue);
+            }
 
             base.Seed(context);
         }
