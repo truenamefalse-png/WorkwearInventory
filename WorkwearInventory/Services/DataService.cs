@@ -40,15 +40,13 @@ namespace WorkwearInventory.Services
 
         public static List<User> GetUsers()
         {
-            using (var db = CreateContext())
-                return db.Users.ToList();
+            using (var db = CreateContext()) return db.Users.ToList();
         }
 
         // ----- Категории -----
         public static List<Category> GetCategories()
         {
-            using (var db = CreateContext())
-                return db.Categories.ToList();
+            using (var db = CreateContext()) return db.Categories.ToList();
         }
 
         public static void AddCategory(string name)
@@ -77,8 +75,7 @@ namespace WorkwearInventory.Services
         // ----- Спецодежда -----
         public static List<Product> GetProducts()
         {
-            using (var db = CreateContext())
-                return db.Products.Include("Category").ToList();
+            using (var db = CreateContext()) return db.Products.Include("Category").ToList();
         }
 
         public static void AddProduct(Product product)
@@ -98,6 +95,7 @@ namespace WorkwearInventory.Services
                     existing.CategoryId = product.CategoryId;
                     existing.Stock = product.Stock;
                     existing.WearPeriodDays = product.WearPeriodDays;
+                    existing.Size = product.Size;
                     existing.PhotoPath = product.PhotoPath;
                     db.SaveChanges();
                 }
@@ -114,7 +112,7 @@ namespace WorkwearInventory.Services
         }
 
         // ----- Выдача -----
-        public static IssueReceipt IssueProduct(int productId, string employeeName, int quantity, int wearDays)
+        public static IssueReceipt IssueProduct(int productId, string employeeName, int quantity, int wearDays, string size)
         {
             using (var db = CreateContext())
             {
@@ -134,7 +132,8 @@ namespace WorkwearInventory.Services
                 {
                     ProductName = product.Name,
                     Quantity = quantity,
-                    WearPeriodDays = wearDays   // теперь используется переданное значение
+                    WearPeriodDays = wearDays,
+                    Size = size                           // сохраняем переданный размер
                 }
             }
                 };
@@ -145,8 +144,6 @@ namespace WorkwearInventory.Services
             }
         }
 
-
-        // Возврат: устанавливает дату возврата и возвращает количество на склад
         public static bool ReturnProduct(int issueReceiptId)
         {
             using (var db = CreateContext())
@@ -159,7 +156,6 @@ namespace WorkwearInventory.Services
                     var product = db.Products.FirstOrDefault(p => p.Name == item.ProductName);
                     if (product != null) product.Stock += item.Quantity;
                 }
-
                 receipt.DateReturned = DateTime.Now;
                 db.SaveChanges();
                 return true;
@@ -168,8 +164,31 @@ namespace WorkwearInventory.Services
 
         public static List<IssueReceipt> GetIssueReceipts()
         {
+            using (var db = CreateContext()) return db.IssueReceipts.Include("Items").ToList();
+        }
+
+        // ----- Заявки -----
+        public static void CreateRequest(Request request)
+        {
             using (var db = CreateContext())
-                return db.IssueReceipts.Include("Items").ToList();
+            {
+                db.Requests.Add(request);
+                db.SaveChanges();
+            }
+        }
+
+        public static List<Request> GetRequests()
+        {
+            using (var db = CreateContext()) return db.Requests.ToList();
+        }
+
+        public static void UpdateRequestStatus(int id, string status)
+        {
+            using (var db = CreateContext())
+            {
+                var req = db.Requests.Find(id);
+                if (req != null) { req.Status = status; db.SaveChanges(); }
+            }
         }
 
         // ----- Фото -----

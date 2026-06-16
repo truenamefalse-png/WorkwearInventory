@@ -29,7 +29,6 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="15" Foreground="{StaticResource TextBrush}"/>
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <!-- Кнопки увеличены: FontSize 14, Padding 10,5 -->
                                 <Button Content="Изменить" Style="{StaticResource ModernButton}" 
                                         Background="#F39C12" FontSize="14" Padding="10,5"
                                         Click="EditCategory_Click" Tag="{Binding Id}" Margin="0,0,5,0"/>

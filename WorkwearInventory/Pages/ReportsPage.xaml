@@ -2,47 +2,46 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Журнал выдачи" Background="{StaticResource LightBrush}">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="15">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Button Content="Экспорт в CSV" Style="{StaticResource ModernButton}" HorizontalAlignment="Right" Margin="0,0,0,10" Click="ExportCsv_Click"
-                    FontSize="14" Padding="12,6"/>
-            <DataGrid Grid.Row="1" x:Name="SalesGrid" Style="{StaticResource ModernDataGrid}"
-                      AutoGenerateColumns="False" IsReadOnly="False" FontSize="13">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="40"/>
-                    <DataGridTextColumn Header="Дата" Binding="{Binding IssueDate, StringFormat='dd.MM.yyyy'}" Width="90"/>
-                    <DataGridTextColumn Header="Сотрудник" Binding="{Binding EmployeeName}" Width="150"/>
-                    <DataGridTemplateColumn Header="Позиции" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding Items}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ProductName}"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Срок носки" Binding="{Binding Items[0].WearPeriodDays}" Width="80"/>
-                    <DataGridTextColumn Header="Дата возврата" Binding="{Binding DateReturned, StringFormat='dd.MM.yyyy'}" Width="100"/>
-                    <DataGridTemplateColumn Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Вернуть" Style="{StaticResource ModernButton}" Background="#E67E22"
-                                        FontSize="12" Padding="5,3" Click="ReturnIssue_Click"
-                                        Tag="{Binding Id}"
-                                        IsEnabled="{Binding DateReturned, Converter={StaticResource NullToBoolConverter}}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-    </ScrollViewer>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Экспорт в CSV" Style="{StaticResource ModernButton}" HorizontalAlignment="Right" Margin="0,0,0,10" Click="ExportCsv_Click"
+                FontSize="14" Padding="12,6"/>
+        <DataGrid Grid.Row="1" x:Name="SalesGrid" Style="{StaticResource ModernDataGrid}"
+                  AutoGenerateColumns="False" IsReadOnly="False" FontSize="13" VerticalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="40"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding IssueDate, StringFormat='dd.MM.yyyy'}" Width="90"/>
+                <DataGridTextColumn Header="Сотрудник" Binding="{Binding EmployeeName}" Width="150"/>
+                <DataGridTemplateColumn Header="Позиции" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ProductName}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Срок носки" Binding="{Binding Items[0].WearPeriodDays}" Width="80"/>
+                <DataGridTextColumn Header="Дата возврата" Binding="{Binding DateReturned, StringFormat='dd.MM.yyyy'}" Width="100"/>
+                <DataGridTemplateColumn Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource ModernButton}" Background="#E67E22"
+                                    FontSize="12" Padding="5,3" Click="ReturnIssue_Click"
+                                    Tag="{Binding Id}"
+                                    IsEnabled="{Binding DateReturned, Converter={StaticResource NullToBoolConverter}}"
+                                    Content="{Binding DateReturned, Converter={StaticResource BoolToReturnTextConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </Page>

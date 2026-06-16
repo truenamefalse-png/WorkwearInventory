@@ -37,6 +37,7 @@ namespace WorkwearInventory.Pages
                     CategoryName = p.Category?.Name ?? "",
                     Stock = p.Stock,
                     WearPeriodDays = p.WearPeriodDays,
+                    Size = p.Size,
                     PhotoPath = p.PhotoPath
                 });
             }
@@ -65,6 +66,7 @@ namespace WorkwearInventory.Pages
                     CategoryName = p.Category?.Name ?? "",
                     Stock = p.Stock,
                     WearPeriodDays = p.WearPeriodDays,
+                    Size = p.Size,
                     PhotoPath = p.PhotoPath
                 }).ToList();
 
@@ -134,7 +136,8 @@ namespace WorkwearInventory.Pages
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int Stock { get; set; }
-        public int WearPeriodDays { get; set; }   // вместо Price
+        public int WearPeriodDays { get; set; }
+        public string Size { get; set; }                // <-- новое поле
         public string PhotoPath { get; set; }
     }
 }

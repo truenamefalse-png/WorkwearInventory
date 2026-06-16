@@ -24,6 +24,7 @@ namespace WorkwearInventory
         private void NavigateToProducts(object sender, RoutedEventArgs e) => MainFrame.Navigate(new ProductsPage());
         private void NavigateToCategories(object sender, RoutedEventArgs e) => MainFrame.Navigate(new CategoriesPage());
         private void NavigateToReports(object sender, RoutedEventArgs e) => MainFrame.Navigate(new ReportsPage());
+        private void NavigateToRequests(object sender, RoutedEventArgs e) => MainFrame.Navigate(new RequestsPage());
         private void NavigateToUsers(object sender, RoutedEventArgs e) => MainFrame.Navigate(new UsersPage());
         private void Logout_Click(object sender, RoutedEventArgs e)
         {

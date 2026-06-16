@@ -21,6 +21,7 @@ namespace WorkwearInventory
                 NameBox.Text = product.Name;
                 DescriptionBox.Text = product.Description;
                 CategoryCombo.SelectedValue = product.CategoryId;
+                SizeBox.Text = product.Size;
                 WearPeriodBox.Text = product.WearPeriodDays.ToString();
                 StockBox.Text = product.Stock.ToString();
                 if (!string.IsNullOrEmpty(product.PhotoPath)) PhotoNameText.Text = product.PhotoPath;
@@ -53,6 +54,7 @@ namespace WorkwearInventory
                 Name = NameBox.Text,
                 Description = DescriptionBox.Text,
                 CategoryId = (int)CategoryCombo.SelectedValue,
+                Size = SizeBox.Text,
                 WearPeriodDays = wear,
                 Stock = stock
             };

@@ -1,0 +1,35 @@
+﻿<Page x:Class="WorkwearInventory.Pages.RequestsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Заявки" Background="{StaticResource LightBrush}">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Новая заявка" Style="{StaticResource ModernButton}" Click="NewRequest_Click" FontSize="14" Padding="12,6"/>
+        </StackPanel>
+        <DataGrid Grid.Row="1" x:Name="RequestsGrid" Style="{StaticResource ModernDataGrid}"
+                  AutoGenerateColumns="False" IsReadOnly="True" FontSize="13">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding RequestDate, StringFormat='dd.MM.yyyy'}" Width="90"/>
+                <DataGridTextColumn Header="Сотрудник" Binding="{Binding EmployeeName}" Width="130"/>
+                <DataGridTextColumn Header="Наименование" Binding="{Binding ProductName}" Width="150"/>
+                <DataGridTextColumn Header="Размер" Binding="{Binding Size}" Width="70"/>
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="55"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="80"/>
+                <DataGridTemplateColumn Width="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource ModernButton}" Background="#27AE60"
+                                    FontSize="12" Padding="5,3" Click="CompleteRequest_Click" Tag="{Binding Id}"
+                                    IsEnabled="{Binding Status, Converter={StaticResource RequestStatusConverter}}"
+                                    Content="{Binding Status, Converter={StaticResource RequestStatusToButtonTextConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

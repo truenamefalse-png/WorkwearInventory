@@ -8,7 +8,7 @@ namespace WorkwearInventory.Models
         public int Id { get; set; }
         public DateTime IssueDate { get; set; }
         public string EmployeeName { get; set; }
-        public DateTime? DateReturned { get; set; }         // дата возврата (null = не возвращено)
+        public DateTime? DateReturned { get; set; }
         public virtual ICollection<IssueItem> Items { get; set; } = new List<IssueItem>();
     }
 
@@ -18,8 +18,8 @@ namespace WorkwearInventory.Models
         public int IssueReceiptId { get; set; }
         public string ProductName { get; set; }
         public int Quantity { get; set; }
-        public int WearPeriodDays { get; set; }            // срок носки на момент выдачи
-
+        public int WearPeriodDays { get; set; }
+        public string Size { get; set; }                     // <-- новое поле
         public virtual IssueReceipt IssueReceipt { get; set; }
     }
 }

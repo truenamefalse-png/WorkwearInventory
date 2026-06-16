@@ -13,15 +13,18 @@ namespace WorkwearInventory
             InitializeComponent();
             this.productId = productId;
 
-            // Подгружаем срок носки из базы и ставим в поле по умолчанию
             var product = DataService.GetProducts().FirstOrDefault(p => p.Id == productId);
             if (product != null)
             {
+                ProductInfoText.Text = product.Name;
+                SizeBox.Text = product.Size ?? "";   // предзаполняем размер из карточки
                 WearPeriodBox.Text = product.WearPeriodDays.ToString();
             }
             else
             {
-                WearPeriodBox.Text = "30"; // запасное значение
+                ProductInfoText.Text = "Неизвестно";
+                SizeBox.Text = "";
+                WearPeriodBox.Text = "30";
             }
         }
 
@@ -46,8 +49,8 @@ namespace WorkwearInventory
                 return;
             }
 
-            // Вызов метода выдачи с новым параметром (обновлённый DataService ниже)
-            var receipt = DataService.IssueProduct(productId, employee, qty, wearDays);
+            string size = SizeBox.Text.Trim();
+            var receipt = DataService.IssueProduct(productId, employee, qty, wearDays, size);
             if (receipt == null)
             {
                 MessageBox.Show("Недостаточно на складе.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);

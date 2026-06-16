@@ -66,8 +66,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BoolToReturnTextConverter.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
+    <Compile Include="Converters\RequestStatusConverter.cs" />
+    <Compile Include="Converters\RequestStatusToButtonTextConverter.cs" />
     <Compile Include="Converters\StockColorConverter.cs" />
     <Compile Include="IssueDocumentWindow.xaml.cs">
       <DependentUpon>IssueDocumentWindow.xaml</DependentUpon>
@@ -78,12 +81,19 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\IssueReceipt.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Request.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\ProductEditWindow.xaml.cs">
       <DependentUpon>ProductEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\RequestsPage.xaml.cs">
+      <DependentUpon>RequestsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\UsersPage.xaml.cs">
       <DependentUpon>UsersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RequestCreateWindow.xaml.cs">
+      <DependentUpon>RequestCreateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AppDbContext.cs" />
     <Compile Include="Services\DataService.cs" />
@@ -136,7 +146,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\RequestsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\UsersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RequestCreateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

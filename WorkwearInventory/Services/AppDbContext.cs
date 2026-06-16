@@ -15,6 +15,7 @@ namespace WorkwearInventory.Services
         public DbSet<Product> Products { get; set; }
         public DbSet<IssueReceipt> IssueReceipts { get; set; }
         public DbSet<IssueItem> IssueItems { get; set; }
+        public DbSet<Request> Requests { get; set; }      // <-- НОВОЕ
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -4,21 +4,20 @@
              xmlns:local="clr-namespace:WorkwearInventory.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!-- Бежевая палитра -->
+        <!-- Цветовая схема -->
         <SolidColorBrush x:Key="PrimaryBrush" Color="#5D4037"/>
-        <!-- тёмно-коричневый для боковой панели -->
         <SolidColorBrush x:Key="AccentBrush" Color="#8D6E63"/>
-        <!-- приглушённый бежево-коричневый для кнопок -->
         <SolidColorBrush x:Key="LightBrush" Color="#FFF8E1"/>
-        <!-- светлый кремовый фон -->
         <SolidColorBrush x:Key="TextBrush" Color="#4E342E"/>
-        <!-- тёмно-коричневый текст -->
         <SolidColorBrush x:Key="WhiteBrush" Color="#FFFFFF"/>
 
         <!-- Конвертеры -->
         <local:ImagePathConverter x:Key="ImageConverter"/>
         <local:StockColorConverter x:Key="StockColorConverter"/>
         <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
+        <local:RequestStatusConverter x:Key="RequestStatusConverter"/>
+        <local:RequestStatusToButtonTextConverter x:Key="RequestStatusToButtonTextConverter"/>
+        <local:BoolToReturnTextConverter x:Key="BoolToReturnTextConverter"/>
 
         <!-- Кнопка -->
         <Style TargetType="Button" x:Key="ModernButton">

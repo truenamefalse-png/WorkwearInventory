@@ -46,7 +46,9 @@ namespace WorkwearInventory
                 sb.AppendLine($"Окончание срока: {receipt.IssueDate.AddDays(item?.WearPeriodDays ?? 0):dd.MM.yyyy}");
                 sb.AppendLine("--------------------------------");
                 foreach (var i in receipt.Items)
-                    sb.AppendLine($"{i.ProductName} x{i.Quantity}");
+                {
+                    sb.AppendLine($"{i.ProductName}, Размер: {i.Size}, Кол-во: {i.Quantity}");
+                }
                 File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
                 MessageBox.Show("Наряд сохранён.");
             }

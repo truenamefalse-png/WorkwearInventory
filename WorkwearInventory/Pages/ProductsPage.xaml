@@ -8,16 +8,13 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!-- Панель фильтров -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
                 <TextBlock Text="Категория:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox x:Name="CategoryFilter" Width="150" Style="{StaticResource ModernComboBox}" SelectionChanged="FilterChanged"/>
                 <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="15,0,5,0"/>
                 <TextBox x:Name="SearchBox" Width="150" Style="{StaticResource ModernTextBox}" TextChanged="FilterChanged"/>
-                <Button Content="Добавить позицию" Style="{StaticResource ModernButton}" Click="AddProduct_Click" Margin="20,0,0,0"
-                        FontSize="14" Padding="12,6"/>
+                <Button Content="Добавить позицию" Style="{StaticResource ModernButton}" Click="AddProduct_Click" Margin="20,0,0,0" FontSize="14" Padding="12,6"/>
             </StackPanel>
-            <!-- Таблица -->
             <DataGrid x:Name="ProductsGrid" Grid.Row="1" Style="{StaticResource ModernDataGrid}"
                       AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" FontSize="13">
                 <DataGrid.Columns>
@@ -29,10 +26,11 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*"/>
-                    <DataGridTextColumn Header="Характеристики" Binding="{Binding Description}" Width="130"/>
-                    <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="100"/>
-                    <DataGridTextColumn Header="Срок носки (дн.)" Binding="{Binding WearPeriodDays}" Width="90"/>
-                    <DataGridTemplateColumn Header="Количество" Width="70">
+                    <DataGridTextColumn Header="Характеристики" Binding="{Binding Description}" Width="110"/>
+                    <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="90"/>
+                    <DataGridTextColumn Header="Размер" Binding="{Binding Size}" Width="65"/>
+                    <DataGridTextColumn Header="Срок носки (дн.)" Binding="{Binding WearPeriodDays}" Width="85"/>
+                    <DataGridTemplateColumn Header="Кол-во" Width="55">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Stock}" Foreground="{Binding Stock, Converter={StaticResource StockColorConverter}}" FontWeight="Bold"/>
@@ -43,12 +41,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Выдать" Style="{StaticResource ModernButton}" Background="#27AE60"
-                                            FontSize="13" Padding="8,4" Click="IssueProduct_Click" Tag="{Binding Id}" Margin="0,0,3,0"/>
-                                    <Button Content="Изменить" Style="{StaticResource ModernButton}" Background="#F39C12"
-                                            FontSize="13" Padding="8,4" Click="EditProduct_Click" Tag="{Binding Id}" Margin="0,0,3,0"/>
-                                    <Button Content="Удалить" Style="{StaticResource ModernButton}" Background="#E74C3C"
-                                            FontSize="13" Padding="8,4" Click="DeleteProduct_Click" Tag="{Binding Id}"/>
+                                    <Button Content="Выдать" Style="{StaticResource ModernButton}" Background="#27AE60" FontSize="13" Padding="8,4" Click="IssueProduct_Click" Tag="{Binding Id}" Margin="0,0,3,0"/>
+                                    <Button Content="Изменить" Style="{StaticResource ModernButton}" Background="#F39C12" FontSize="13" Padding="8,4" Click="EditProduct_Click" Tag="{Binding Id}" Margin="0,0,3,0"/>
+                                    <Button Content="Удалить" Style="{StaticResource ModernButton}" Background="#E74C3C" FontSize="13" Padding="8,4" Click="DeleteProduct_Click" Tag="{Binding Id}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
